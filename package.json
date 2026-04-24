@@ -1,0 +1,35 @@
+{
+  "name": "smashpro_webdriver_v3",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist",
+    "clean": "docker image rm driver_frontend",
+    "pack":"npm run build && docker build -t driver_frontend . && docker save -o frontend.tar driver_frontend"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "date-fns": "^4.1.0",
+    "lodash": "^4.18.1",
+    "marked": "^17.0.4",
+    "vue": "^3.5.13",
+    "vue-i18n": "^11.2.8",
+    "vuex": "^4.1.0",
+    "y18n": "^5.0.8"
+  },
+  "devDependencies": {
+    "@vicons/ionicons5": "^0.13.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "gh-pages": "^6.3.0",
+    "naive-ui": "^2.41.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vue-router": "^4.5.0",
+    "vue-tsc": "^2.2.4"
+  }
+}
