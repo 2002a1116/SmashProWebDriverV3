@@ -131,7 +131,7 @@ export default {
             is_admin,
             loading:ref(false),
             fw_version_text,
-            latest_fw_version_text: "V1.2.0.5",
+            latest_fw_version_text: "V1.4.0.0",
             reactive,
             conf_unserilize,
             conf_seri: ref(""),
@@ -314,7 +314,7 @@ export default {
     methods: {
         async read_conf_cloud(){
             this.loading=true;
-            const res = await axios.get('/api/config/'+chip_id.value) as any;
+            const res = await axios.get('/config/'+chip_id.value) as any;
             if(res.code!='SUCCESS'){
                 alert(res.code+":"+res.data.message);
             }else{
@@ -340,7 +340,7 @@ export default {
         async save_conf_cloud(){
             this.loading=true;
             this.export_json_config();
-            const res = await axios.post('/api/config',{chipId:chip_id.value,firmwareVersion:fw_version,config:this.conf_seri}) as any;
+            const res = await axios.post('/config',{chipId:chip_id.value,firmwareVersion:fw_version,config:this.conf_seri}) as any;
             console.log({chipId:chip_id.value,firmwareVersion:fw_version,config:this.conf_seri});
             if(res.code!='SUCCESS'){
                 alert(res.code+":"+res.data.message);

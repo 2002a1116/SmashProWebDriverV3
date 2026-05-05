@@ -115,7 +115,8 @@
         "order_note":"Order Note(Internal)",
         "remove":"Remove",
         "stock_info":"Stock Info",
-        "allow_rgb_on_bat":"Allow RGB on battery"
+        "allow_rgb_on_bat":"Allow RGB on battery",
+        "cancel":"Cancel"
     },
     "hint":{
         "drop_high":"#feel big rumble too hard?try this.",
@@ -127,6 +128,7 @@
     },
     "msg":{
         "no_data":"No Data",
+        "save_success":"Save Success",
         "user_config_recoverd":"User config has auto recovered from the server.",
         "factory_config_recovered":"Hardware info has auto recovered from the server.",
         "factory_config_recovered_stock":"Hardware info has auto restore to stock from the server.",

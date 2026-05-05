@@ -118,7 +118,7 @@
     </n-flex>
 </template>
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch, type Ref } from 'vue';
+import { computed, inject, onBeforeMount, onMounted, ref, watch, type Ref } from 'vue';
 import { chip_id, conf, dev_con_flg, fac_conf_unserilize, factory_config, factory_config_save,read_erom } from '../webusb'
 import { useI18n } from 'vue-i18n';
 import FuncSwitch from './FuncSwitch.vue';
@@ -185,57 +185,63 @@ const pcb_rev_list=computed(()=>{
 });
 async function recover_stock_devinfo()
 {
-    if(!stock_info_inited){
+    if(!stock_info_inited.value){
         read_stock_devinfo_cloud();
     }
     fac_conf_unserilize(JSON.parse(stock_info.value.info));
 }
 async function read_devinfo_cloud(){
     loading.value=true;
-    const res = await axios.get('/api/device/'+chip_id.value) as any;
-    if(res.code!='SUCCESS'){
-        alert(res.code+":"+res.data.message);
-    }else{
-        if(res.data.chipId!=chip_id.value){
-            alert("chip id check failed.");
+    try{
+        const res = await axios.get('/device/'+chip_id.value) as any;
+        if(res.code!='SUCCESS'){
+            alert(res.code+":"+res.data.message);
+        }else{
+            if(res.data.chipId!=chip_id.value){
+                alert("chip id check failed.");
+            }
+            else{
+                info_seri.value=res.data.info;
+                fac_conf_unserilize(JSON.parse(res.data.info));
+            }
         }
-        else{
-            info_seri.value=res.data.info;
-            fac_conf_unserilize(JSON.parse(res.data.info));
-        }
-    }
+    }catch(e){}
     loading.value=false;
 }
 async function save_devinfo_cloud(){
     loading.value=true;
     info_seri.value = JSON.stringify(factory_config);
-    const res = await axios.post('/api/device/',{chipId:chip_id.value,info:info_seri.value}) as any;
-    if(res.code!='SUCCESS'){
-        alert(res.code+":"+res.data.message);
-    }else{
-        alert("save cloud success");
-    }
+    try{
+        const res = await axios.post('/device/',{chipId:chip_id.value,info:info_seri.value}) as any;
+        if(res.code!='SUCCESS'){
+            alert(res.code+":"+res.data.message);
+        }else{
+            alert(t('msg.save_success'));
+        }
+    }catch(e){}
     loading.value=false;
 }
 async function read_stock_devinfo_cloud(){
     loading.value=true;
     stock_info_inited.value=false;
-    console.log("read_stock_devinfo_cloud");
-    const res = await axios.get('/api/stock/'+chip_id.value) as any;
-    if(res.code!='SUCCESS'){
-        alert(res.code+":"+res.data.message);
-    }else{
-        if(res.data.chipId!=chip_id.value){
-            alert("chip id check failed.");
+    //console.log("read_stock_devinfo_cloud");
+    try{
+        const res = await axios.get('/stock/'+chip_id.value) as any;
+        if(res.code!='SUCCESS'){
+            //alert(res.code+":"+res.data.message);
+            console.log(res.code+":"+res.data.message);
+        }else{
+            if(res.data.chipId!=chip_id.value){
+                console.log("chip id check failed.");
+            }
+            else{
+                stock_info.value=res.data;
+                stock_info_inited.value=true;
+                console.log(stock_info.value);
+                //fac_conf_unserilize(JSON.parse(res.data.info));
+            }
         }
-        else{
-            stock_info.value=res.data;
-            stock_info_inited.value=true;
-            console.log(stock_info.value);
-            //fac_conf_unserilize(JSON.parse(res.data.info));
-        }
-    }
-    console.log("stock_info_inited:",stock_info_inited.value.toString());
+    }catch(e){}
     loading.value=false;
 }
 async function save_stock_devinfo_cloud(){
@@ -248,12 +254,14 @@ async function save_stock_devinfo_cloud(){
     stock_info.value.model=pcb_typ_list[factory_config.pcb_typ].label;
     stock_info.value.info=info_seri.value;
     console.log(stock_info.value);
-    const res = await axios.post('/api/stock/',stock_info.value) as any;
-    if(res.code!='SUCCESS'){
-        alert(res.code+":"+res.data.message);
-    }else{
-        alert("save stock device info success.");
-    }
+    try{
+        const res = await axios.post('/stock/',stock_info.value) as any;
+        if(res.code!='SUCCESS'){
+            alert(res.code+":"+res.data.message);
+        }else{
+            alert("save stock device info success.");
+        }
+    }catch(e){}
     loading.value=false;
 }
 async function remove_stock_devinfo_cloud(){
@@ -262,19 +270,19 @@ async function remove_stock_devinfo_cloud(){
     if(isEmpty(id)){
         id=chip_id.value;
     }
-    const res = await axios.post('/api/stock/remove/'+id,null) as any;
-    if(res.code!='SUCCESS'){
-        alert(res.code+":"+res.data.message);
-    }else{
-        alert(`stock device ${id} info removed.`);
-    }
+    try{
+        const res = await axios.post('/stock/remove/'+id,null) as any;
+        if(res.code!='SUCCESS'){
+            alert(res.code+":"+res.data.message);
+        }else{
+            alert(`stock device ${id} info removed.`);
+        }
+    }catch(e){}
     loading.value=false;
 }
-onMounted(()=>{
-    if(!isEmpty(chip_id.value))
-        read_stock_devinfo_cloud();
-})
-watch(chip_id,(newVal)=>{read_stock_devinfo_cloud()});
-watch(is_admin as any,(newVal)=>{read_stock_devinfo_cloud()});
-watch(dev_con_flg,(newVal)=>{stock_info_inited.value=false;})
+if(!isEmpty(chip_id.value))
+    read_stock_devinfo_cloud();
+watch(chip_id,(newVal)=>{if(!isEmpty(chip_id.value))read_stock_devinfo_cloud()});
+watch(is_admin as any,(newVal)=>{if(!isEmpty(chip_id.value))read_stock_devinfo_cloud()});
+watch(dev_con_flg,(newVal)=>{if(!isEmpty(chip_id.value))stock_info_inited.value=false;});
 </script>

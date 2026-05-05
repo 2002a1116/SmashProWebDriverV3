@@ -171,23 +171,23 @@ export default defineComponent({
             {default: () => t('label.info')}
           ),
         key: 'Info',
-        icon: renderIcon(HomeIcon),
+        icon: renderIcon(HomeIcon)
       },
     ]);
     var langs:MenuOption[]=[
       {
-        label: "english",
+        label: "English",
         key: 'en-US',
         icon:renderIcon(DownloadIcon),
       },{
-        label: "chinese",
+        label: "Chinese",
         key: 'zh-CN',
         icon:renderIcon(DownloadIcon),
       }
     ]
     var langs_outlayer:MenuOption[]=[
       {
-        label: "langs",
+        label: "Langs",
         key: 'top',
         icon:renderIcon(DownloadIcon),
         children: langs
@@ -223,7 +223,7 @@ export default defineComponent({
         icon:renderIcon(RestartIcon),
         disabled: !dev_con_flg.value
       },{
-        label: 'login',
+        label: t('text.login'),
         key: 'login',
         icon:renderIcon(OpenIcon),
         disabled: false

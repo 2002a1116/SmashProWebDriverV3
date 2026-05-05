@@ -282,7 +282,7 @@ export default {
                     Math.round(((js[1].pos.y-2048)/this.js_ratio_3)).toString(), 130, 330);
             } catch (e: any) {
                 console.log("draw error");
-                console.log(e.message);
+                console.log(e);
             }
         }
     },

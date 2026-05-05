@@ -1,6 +1,6 @@
 <template>
     <n-grid :x-gap="props.x_gap" :y-gap="props.y_gap" 
-        :cols="props.cols" :collapsed-rows="props.c_rows" 
+        :cols="props.cols" :collapsed-rows="Number(props.c_rows)" 
         :item-responsive="props.item_responsive"
     >
         <template v-for="(item,index) in options">

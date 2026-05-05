@@ -10,18 +10,18 @@ import Factory from "../components/Driver/Factory.vue";
 import Button from '../components/Driver/Button.vue';
 
 const routes = [
-    { path: '/', name: 'Home', component: Index },
-    { path: '/Joystick', name: 'Joystick', component: Joystick},
-    { path: '/Rumble', name: 'Rumble', component: Rumble},
-    { path: '/Gyro', name: 'Gyro', component: Gyro},
-    { path: '/Rgb', name: 'Rgb', component: Rgb},
-    { path: '/Others', name: 'Others', component: Others},
-    { path: '/Factory', name:'Factory',component: Factory},
-    { path: '/Info', name:'Info',component: Info},
-    { path: '/Button', name:'Button',component: Button},
+    { path: '/', name: 'Home', component: Index, meta: {keepAlive:false}},
+    { path: '/Joystick', name: 'Joystick', component: Joystick, meta: {keepAlive:false}},
+    { path: '/Rumble', name: 'Rumble', component: Rumble, meta: {keepAlive:false}},
+    { path: '/Gyro', name: 'Gyro', component: Gyro, meta: {keepAlive:false}},
+    { path: '/Rgb', name: 'Rgb', component: Rgb, meta: {keepAlive:false}},
+    { path: '/Others', name: 'Others', component: Others, meta: {keepAlive:false}},
+    { path: '/Factory', name:'Factory',component: Factory, meta: {keepAlive:true}},
+    { path: '/Info', name:'Info',component: Info, meta: {keepAlive:false}},
+    { path: '/Button', name:'Button',component: Button, meta: {keepAlive:false}},
   ];
 const router = createRouter({
-    history: createWebHashHistory('/SmashProWebDriverV3/'),
+    history: createWebHashHistory(''),
     routes, // 路由配置
   });
 export default router;

@@ -8,8 +8,13 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist",
+    "pc": "gh-pages-clean",
+    "post": "gh-pages -d dist",
     "clean": "docker image rm driver_frontend",
-    "pack":"npm run build && docker build -t driver_frontend . && docker save -o frontend.tar driver_frontend"
+    "pack:build": "npm run build && npm run pack",
+    "pack": "docker build -t driver_frontend . && docker save -o frontend.tar driver_frontend",
+    "upload": "dockerx build -t driver_frontend .",
+    "update": "npm run deploy && npm run upload"
   },
   "dependencies": {
     "axios": "^1.13.6",
@@ -29,6 +34,7 @@
     "naive-ui": "^2.41.0",
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
+    "vite-plugin-compression": "^0.5.1",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.4"
   }

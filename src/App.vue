@@ -1,9 +1,14 @@
 <template>
   <div id="app">
     <n-layout has-sider>
-        <Sidebar></Sidebar>
+      <Sidebar></Sidebar>
       <n-layout class="n-layout-content">
-        <router-view></router-view>
+        <router-view v-slot="{ Component, route }">
+          <keep-alive>
+            <component :is="Component" v-if="$route.meta.keepAlive" />
+          </keep-alive>
+          <component :is="Component" v-if="!$route.meta.keepAlive" />
+        </router-view>
       </n-layout>
     </n-layout has-sider>
   </div>
@@ -19,6 +24,7 @@ import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 const role = ref("ROLE_USER");
 const { t } = useI18n();
+console.log(import.meta.env);
 provide('$ROLE',role);
 provide('$IS_ADMIN',ref(false));
 provide('$normalize', (obj:Object)=>Object.assign({}, ...Object.entries(obj).map(pair => ({[pair[0]]: pair[1]}))));
@@ -28,7 +34,7 @@ onMounted(()=>{conf_init();});
 watch(conf_inited,async(newVal)=>{
   if(newVal){
     if(conf.config_bitmap0&0x1){//not inited
-      const res = await axios.get('/api/config/'+chip_id.value) as any;
+      const res = await axios.get('/config/'+chip_id.value) as any;
       if(res.code!='SUCCESS'){
           //alert(res.code+":"+res.data.message);
       }else{
@@ -56,18 +62,18 @@ watch(conf_inited,async(newVal)=>{
 watch(fac_conf_inited,async(newVal)=>{
   if(newVal&&(factory_config.config_bitmap0&0x1)){
     let stock=0;
-    let res = await axios.get('/api/device/'+chip_id.value) as any;
+    let res = await axios.get('/device/'+chip_id.value) as any;
     if(res.code!='SUCCESS'){
         //alert(res.code+":"+res.data.message);
-        res = await axios.get('/api/stock/'+chip_id.value) as any;
+        res = await axios.get('/stock/'+chip_id.value) as any;
         stock=1;
         if(res.code!='SUCCESS'){
-          alert('msg.factory_config_recover_failed');
+          alert(t('msg.factory_config_recover_failed'));
           return;
         }
     }
     if(res.data.chipId!=chip_id.value){
-        alert('msg.factory_config_recover_failed');
+      alert(t('msg.factory_config_recover_failed'));
     }
     else{
         fac_conf_unserilize(JSON.parse(res.data.info));

@@ -96,7 +96,7 @@ export class conf_pack{
     rgb_data:rgb[]=([]);//len>=29
 };
 export const conf_inited=ref(false);
-export function unpack_conf(array: number[]) {
+export function unpack_conf(array: number[],inited=true) {
     conf.config_bitmap0 = array[0];
     conf.config_bitmap1 = array[1];
     conf.in_interval = array[2];
@@ -119,13 +119,14 @@ export function unpack_conf(array: number[]) {
     conf.rgb_slow_start_period = array[39];
 
     if(conf.out_interval<=2)conf.out_interval=8;
-    conf_inited.value=true;
+    if(inited)
+        conf_inited.value=true;
 }
 //export let conf=reactive(new conf_pack());
 export function conf_init(){
     conf=reactive(new conf_pack());
     factory_config=reactive(new factory_config_pack());
-    unpack_conf(new Array(256).fill(0));
+    unpack_conf(new Array(256).fill(0),false);
 }
 export function conf_unserilize(p:any){
     //conf = p as conf_pack;
@@ -513,6 +514,7 @@ export const read_conf = async () => {
         chip_id.value="";
         fac_conf_inited.value=false;
         conf_inited.value=false;
+        conf_init();
         alert("device unpluged!");
     }
 };
@@ -532,7 +534,7 @@ export const get_fw_version = async () => {
 export function get_fw_version_text(v:number,v2:number){
     return "V"+((v>>16)&0xff).toString() + "." + ((v>>8)&0xff).toString()+"."+(v&0xff).toString()+"."+v2.toString();
 }
-export const fw_ver_at_least=0x00010200;
+export const fw_ver_at_least=0x00010400;
 export let fw_version_text=ref("V0.0.0.0");
 export const dev_con_flg=ref(false);
 export let chip_id=ref("");

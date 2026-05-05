@@ -115,7 +115,8 @@
         "order_note":"订单备注（内部）",
         "remove":"移除",
         "stock_info":"出厂信息",
-        "allow_rgb_on_bat":"允许RGB离电点亮"
+        "allow_rgb_on_bat":"允许RGB离电点亮",
+        "cancel":"取消"
     },
     "hint":{
         "drop_high":"#尝试降低较强的震动",
@@ -127,6 +128,7 @@
     },
     "msg":{
         "no_data":"无数据",
+        "save_success":"保存成功.",
         "user_config_recoverd":"已自动从云端恢复用户配置.",
         "factory_config_recovered":"已自动从云端恢复硬件信息.",
         "factory_config_recovered_stock":"已自动从云端恢复出厂硬件信息.",

@@ -8,7 +8,7 @@
                     <n-gi span="11">
                         <n-flex vertical justify="center">
                             <n-button :loading="loading" @click="show=false;">
-                                cancel
+                                {{ $t('text.cancel') }}
                                 <template #icon>
                                 <n-icon>
                                     <Cash/>
@@ -53,20 +53,22 @@ const show = defineModel("show", {
 });
 async function handleClick(){
     loading.value=true;
-    alert(JSON.stringify(info.value));
+    //alert(JSON.stringify(info.value));
     try{
         //username=user&password=password
-        let res = await axios.post("/api/login",info.value) as any;
+        let res = await axios.post("/login",info.value) as any;
         console.log(res);
         if(res.code=='SUCCESS'){
             console.log("login success");
             if(res.data.find(r => r.authority == 'ROLE_ADMIN')){
                 role.value='ROLE_ADMIN';
                 console.log('role:'+role.value);
+                alert("login success.");
             }
         }
     }catch(e){
         console.log(e);
+        alert("login failed.");
     }
     loading.value=false;
     show.value=false;

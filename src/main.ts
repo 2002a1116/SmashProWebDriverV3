@@ -20,7 +20,9 @@ const i18n = createI18n({
     "en-US": enUS,
   }
 });
-//axios.defaults.baseURL = 'https://localhost:8080';
+
+axios.defaults.baseURL = import.meta.env.VITE_APP_BACKEND_PATH;
+
 axios.interceptors.request.use(function (config) {
   //console.log('发请求')
   return config;
@@ -28,7 +30,6 @@ axios.interceptors.request.use(function (config) {
     // 出错执行
   return Promise.reject(error);
 });
-
 // 设置响应拦截器
 axios.interceptors.response.use(function (response) {
   //console.log('收到响应')
@@ -39,7 +40,17 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
+// 捕获所有未处理的 Promise 拒绝
+window.addEventListener('unhandledrejection', event => {
+  console.warn('未捕获的 Promise 拒绝:', event.reason);
+  event.preventDefault(); // 阻止默认错误提示
+});
+
+
 const app = createApp(App);
+
+app.config.warnHandler = () => null;
+
 app.use(router);
 app.use(naive);
 app.use(i18n);
