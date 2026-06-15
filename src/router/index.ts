@@ -8,6 +8,8 @@ import Others from "../components/Driver/Others.vue";
 import Info from "../components/Info.vue";
 import Factory from "../components/Driver/Factory.vue";
 import Button from '../components/Driver/Button.vue';
+import Format from '../components/Driver/Format.vue';
+import Drag from '../components/Driver/drag.vue';
 
 const routes = [
     { path: '/', name: 'Home', component: Index, meta: {keepAlive:false}},
@@ -19,6 +21,8 @@ const routes = [
     { path: '/Factory', name:'Factory',component: Factory, meta: {keepAlive:true}},
     { path: '/Info', name:'Info',component: Info, meta: {keepAlive:false}},
     { path: '/Button', name:'Button',component: Button, meta: {keepAlive:false}},
+    { path: '/Format', name:'Format',component: Format, meta:{keepAlive:false}},
+    { path: '/Drag', name:'Drag',component: Drag, meta:{keepAlive:false}},
   ];
 const router = createRouter({
     history: createWebHashHistory(''),

@@ -4,7 +4,7 @@
         <n-flex justify="center">
             <h1>Home Page</h1>
         </n-flex>
-        <n-card style="max-width: 800px;">
+        <n-card style="width: 800px;">
             <n-flex vertical>
                 <n-flex justify="center">
                     <n-carousel autoplay show-arrow>
@@ -35,11 +35,15 @@
                         {{ $t('label.open') }}
                     </n-button>
                 </n-flex>
-                <n-flex justify="center">
-                    <span>839973286,Controller group,手柄交流群</span>
-                </n-flex>
-                <n-flex justify="center">
-                    <span>我知道图不好看,欢迎大家返图，设备打开功能迁移至左侧侧边栏</span>
+                    <n-flex justify="center">
+                    <n-card title="旧版驱动：">
+                        <n-flex justify="center">
+                            <n-flex vertical>
+                                <a href="https://2002a1116.github.io/SmashProWebDriverV2/">固件V1.2.x驱动，已弃用</a>
+                                <a href="legacy.smashpro.icu">固件V1.4.x驱动，已弃用，预计2026-7-1关闭</a>
+                            </n-flex>
+                        </n-flex>
+                    </n-card>
                 </n-flex>
             </n-flex>
         </n-card>
@@ -54,7 +58,7 @@
 }
 </style>
 <script lang="ts">
-import {open_device,device} from '../webusb'
+import {open_device,device} from '../Api/webusb'
 export default{
     setup() {
         return{

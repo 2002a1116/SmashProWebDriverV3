@@ -19,12 +19,12 @@ body {
 }
 
 .n-card {
-  max-width: 400px;
+  width: 450px;
 }
 
 
 .n-card-large {
-  max-width: 1000px;
+  width: 1000px;
 }
 
 .center-container {

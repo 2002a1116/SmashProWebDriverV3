@@ -27,14 +27,7 @@
     </n-layout-sider>
   </div>
   <n-modal v-model:show="show_modal">
-    <n-card
-      style="width: 600px"
-      title="模态框"
-      size="huge"
-      :bordered="false"
-    >
       <login v-model:show="show_modal"></login>
-    </n-card>
   </n-modal>
 </template>
 <style scoped>
@@ -59,22 +52,22 @@ import {
 import { NIcon } from 'naive-ui'
 import { computed, defineComponent, h, inject, reactive, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { fw_snd, open_device, read_conf, send_conf, send_rgb, read_erom, dev_con_flg, controller_color_save, factory_config_save } from './webusb'
+import { fw_snd, open_device, read_conf, send_conf, read_erom_sync, dev_con_flg, controller_color_save } from './Api/webusb'
 import { useI18n } from 'vue-i18n'
 import router from '../router'
 import Login from './UI/Login.vue'
+import { conf } from './Api/config.ts'
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 let show_modal=ref(false);
 let role:Ref<string>;
-let is_admin:Ref<boolean>;
 export default defineComponent({
   setup() {
     const { t } = useI18n();
     role=inject('$ROLE');
-    is_admin=inject('$IS_ADMIN');
+    const is_admin=inject('$IS_ADMIN') as Ref<boolean>;
     const navs = computed(()=>[
       {
         label: () =>
@@ -162,6 +155,29 @@ export default defineComponent({
         key: 'Info',
         icon: renderIcon(HomeIcon),
         show: dev_con_flg.value
+      },
+      {
+        label: () =>
+          h(
+            RouterLink,
+            {to: {name: 'Format'}},
+            {default: () => t('label.format')}
+          ),
+        key: 'Format',
+        icon: renderIcon(HomeIcon),
+        show: is_admin.value
+        //show: true
+      }, {
+        label: () =>
+          h(
+            RouterLink,
+            {to: {name: 'Drag'}},
+            {default: () => 'Drag'}
+          ),
+        key: 'Drag',
+        icon: renderIcon(HomeIcon),
+        //show: is_admin.value
+        show: false
       },
       {
         label: () =>
@@ -260,13 +276,13 @@ export default defineComponent({
         open_device();
       }else if(key=='read'){
         read_conf();
-        read_erom(0x9000,0xff);
+       //read_erom_sync(0x9000,0xff);
       }else if(key=='set'){
         send_conf(0);
       }else if(key=='save'){
         //factory_config_save(2);
+        conf.magic = 0x55;
         controller_color_save(0x1);
-        send_rgb(0x1);
         send_conf(0xf);
       }else if(key=='restart'){
         fw_snd(0xFE, null);

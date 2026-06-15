@@ -17,7 +17,8 @@
         "save_all":"save_all",
         "restart":"restart",
         "lang":"language",
-        "opts":"operations"
+        "opts":"operations",
+        "format":"Formats"
     },
     "text":{
         "read":"Read",
@@ -79,7 +80,7 @@
         "skip_flat_wave":"skip flat line wave",
         "imu":"imu",
         "sample_gap":"sample gap",
-        "pcb":"pcb",
+        "pcb":"PCB",
         "input":"input",
         "type":"type",
         "underlayer_rgb":"underlayer RGB",
@@ -115,8 +116,15 @@
         "order_note":"Order Note(Internal)",
         "remove":"Remove",
         "stock_info":"Stock Info",
-        "allow_rgb_on_bat":"Allow RGB on battery",
-        "cancel":"Cancel"
+        "allow_rgb_on_bat":"Light RGB on battery",
+        "cancel":"Cancel",
+        "indi_led_ofst":"indicate led offset",
+        "typ":"type",
+        "cloud_service":"Cloud Service",
+        "show_octo":"Show Octo Notch.",
+        "scanrate":"Button Scan Rate",
+        "stock":"Stock",
+        "config":"Config"
     },
     "hint":{
         "drop_high":"#feel big rumble too hard?try this.",
@@ -124,7 +132,10 @@
         "rumble_strategy":"rumble wave switch strategy(legacy mode only):",
         "js_center_cali":"Plz keep joysticks in the center before calibrating.",
         "hw_setting":"Set Hardware Info Here",
-        "stock_info_notfound":"Stock Info Notfound"
+        "stock_info_notfound":"Stock Info Notfound",
+        "for_ns":"Works on Switch",
+        "best_for_ns":"Recommended for Switch",
+        "not_for_ns":"Not Recommended for Switch"
     },
     "msg":{
         "no_data":"No Data",
@@ -134,6 +145,27 @@
         "factory_config_recovered_stock":"Hardware info has auto restore to stock from the server.",
         "user_config_recover_failed":"User config recovered from the server failed,please set manually.",
         "factory_config_recover_failed":"Hardware info recovered from the server failed,please set manually."
+    },
+    "dir":{
+        "up":"Up",
+        "down":"Down",
+        "left":"Left",
+        "right":"Right",
+        "up_left":"Up left",
+        "up_right":"Up right",
+        "down_left":"Down left",
+        "down_right":"Down right"
+    },
+    "affine":{
+        "angle":"Angle",
+        "notch":"Notch",
+        "add":"Add",
+        "clear":"Clear",
+        "mod":"Modify",
+        "del":"Delete",
+        "empty":"List is empty.",
+        "legit":"List is legitimate.",
+        "illegit":"List is illegitimate."
     },
     "cur_lang":"English",
     "word_sep":" "

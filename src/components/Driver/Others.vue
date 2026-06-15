@@ -11,29 +11,34 @@
                             <n-gi span="6">
                                     <span>{{ $t('text.bt_addr') }}:</span>
                             </n-gi>
-                            <n-gi span="3">
+                            <n-gi span="3" style="display: flex; align-items: center; gap: 2px;">
                                 <n-input v-model:value="bd_addr_0" :show-button=false style="width: 40px" min="0"
-                                    max="255" />:
+                                    max="255" size="tiny"/>
+                                <span style="margin: 0 2px;">:</span>
                             </n-gi>       
-                            <n-gi span="3">                 
+                            <n-gi span="3" style="display: flex; align-items: center; gap: 2px;">       
                                 <n-input v-model:value="bd_addr_1" :show-button=false style="width: 40px" min="0"
-                                    max="255" />:
+                                    max="255" size="tiny"/>
+                                <span style="margin: 0 2px;">:</span>
                             </n-gi>       
-                            <n-gi span="3">      
+                            <n-gi span="3" style="display: flex; align-items: center; gap: 2px;">
                                 <n-input v-model:value="bd_addr_2" :show-button=false style="width: 40px" min="0"
-                                    max="255" />:
+                                    max="255" size="tiny"/>
+                                <span style="margin: 0 2px;">:</span>
                             </n-gi>       
-                            <n-gi span="3">      
+                            <n-gi span="3" style="display: flex; align-items: center; gap: 2px;">
                                 <n-input v-model:value="bd_addr_3" :show-button=false style="width: 40px" min="0"
-                                    max="255" />:
+                                    max="255" size="tiny"/>
+                                <span style="margin: 0 2px;">:</span>
                             </n-gi>       
-                            <n-gi span="3">      
+                            <n-gi span="3" style="display: flex; align-items: center; gap: 2px;">
                                 <n-input v-model:value="bd_addr_4" :show-button=false style="width: 40px" min="0"
-                                    max="255" />:
+                                    max="255" size="tiny"/>
+                                <span style="margin: 0 2px;">:</span>
                             </n-gi>       
-                            <n-gi span="3">      
+                            <n-gi span="3" style="display: flex; align-items: center; gap: 2px;">     
                                 <n-input v-model:value="bd_addr_5" :show-button=false style="width: 40px" min="0"
-                                    max="255" />
+                                    max="255" size="tiny"/>
                             </n-gi>
                             <n-gi span="6">
                                 <n-flex justify="end">
@@ -44,17 +49,19 @@
                     </n-flex>
                     <n-flex justify="space-between">
                         <span>{{ $t('text.pfw') }}:</span>
-                        <n-select v-model:value="conf.pro_fw_version" :options="pro_fw_ver_list" style="width: 150px" />
+                        <n-select v-model:value="conf.basic.pro_fw_version" :options="pro_fw_ver_list" style="width: 150px" />
                     </n-flex>
                     <n-flex justify="space-between">
                         <span>{{ $t('text.rpt_rate') }}:</span>
-                        <n-select v-model:value="conf.in_interval" :options="report_rate_list" style="width: 150px" />
+                        <!--<n-select v-model:value="conf.usb.in_interval" :options="report_rate_list" style="width: 150px" />-->
+                        <hint-select v-model:value="conf.usb.in_interval" :options="report_rate_list" style="width: 150px"/>
                     </n-flex>
                     <n-flex justify="space-between">
                         <span>{{ $t('text.pkt_timer') }}:</span>
-                        <n-select v-model:value="conf.ns_pkt_timer_mode" :options="pkt_timer_mode_list"
+                        <n-select v-model:value="conf.basic.ns_pkt_timer_mode" :options="pkt_timer_mode_list"
                             style="width: 150px" />
                     </n-flex>
+                    <func-switch v-model:value="conf.usb.auto_recovery" :text="$t('text.usb_recovery')"/>
                 </n-flex>
             </n-card>
             <n-card :title="$t('text.hw_settings')">
@@ -68,18 +75,12 @@
                         {{ latest_fw_version_text }}
                     </n-flex>
                     <n-flex justify="space-between">
-                        <span> chip_id:</span>
+                        <span>{{$t('text.chip_id')}}:</span>
                         {{ chip_id }}
                     </n-flex>
-                    <func-switch v-model:value="usb_auto_recovery" :text="$t('text.usb_recovery')"/>
-                    <n-flex vertical>
-                        <n-card>
-                            <n-flex justify="space-between">
-                                <span>{{ $t('text.rgb_slow_start') }}:</span>
-                                <n-input-number v-model:value="rgb_slow_start_period" size="small" :step="0.05" :min="0" :max="10" style="width: 100px;"/>
-                            </n-flex>
-                            <n-slider v-model:value="rgb_slow_start_period" :step="0.05" :min="0" :max="10"/>
-                        </n-card>
+                    <n-flex justify="space-between">
+                        <span>{{ $t('text.scanrate') }}:</span>
+                        {{ scan_rate }}HZ
                     </n-flex>
                 </n-flex>
             </n-card>
@@ -90,8 +91,8 @@
                     {{ $t('text.left_grip') }}:<n-color-picker :show-preview="true" v-model:value="color_grip_left" />
                     {{ $t('text.right_grip') }}:<n-color-picker :show-preview="true" v-model:value="color_grip_right" />
                     <n-flex justify="space around">
-                        <n-button @click="read_erom(0x6050, 0x0C)">{{ $t('text.read') }}</n-button>
-                        <n-button @click="controller_color_save(0xf)">{{ $t('text.save') }}</n-button>
+                        <n-button @click="read_erom_sync(0x6050, 0x0C)">{{ $t('text.read') }}</n-button>
+                        <n-button @click="controller_color_save(0x1)">{{ $t('text.save') }}</n-button>
                     </n-flex>
                 </n-flex>
             </n-card>
@@ -105,10 +106,18 @@
                         <n-button @click="import_json_config">{{ $t('text.imp') }}</n-button>
                         <n-button @click="export_json_config">{{ $t('text.exp') }}</n-button>
                     </n-flex>
-                    <n-divider/>
+                    <n-divider>{{ $t('text.cloud_service') }}</n-divider>
                     <n-flex justify="space-around">
-                        <n-button :loading="loading" @click="read_conf_cloud()"> {{ $t('text.read') }} {{ $t('text.cloud') }}</n-button>
-                        <n-button :loading="loading" @click="save_conf_cloud()"> {{ $t('text.save') }} {{ $t('text.cloud') }}</n-button>
+                        <n-button :loading="loading" @click="read_conf_cloud()"> {{ $t('text.read')+$t('word_sep')+$t('text.cloud') }}</n-button>
+                        <n-button :loading="loading" @click="save_conf_cloud()"> {{ $t('text.save')+$t('word_sep')+$t('text.cloud') }}</n-button>
+                        <n-button :loading="loading" @click="read_stock_conf()">
+                            {{ $t('text.read')+$t('word_sep')+$t('text.stock')+$t('word_sep')+$t('text.config') }}
+                        </n-button>
+                        <template v-if="is_admin">
+                            <n-button :loading="loading" @click="save_stock_conf()">
+                                {{ $t('text.save')+$t('word_sep')+$t('text.stock')+$t('word_sep')+$t('text.config') }}
+                            </n-button>
+                        </template>
                     </n-flex>
                 </n-flex>
             </n-card>
@@ -117,28 +126,33 @@
 </template>
 <script lang="ts">
 import { defineComponent, inject, reactive, ref } from 'vue'
-import { conf, conf_unserilize, controller_color, controller_color_save, gen_bt_addr, 
-    fw_version_text, hex_to_rgb, read_erom, rgb_to_hex, factory_config, fac_conf_unserilize, 
-    factory_config_save, send_conf, send_rgb, chip_id, 
-    fw_version} from '../webusb'
-import { FastFood, Send } from '@vicons/ionicons5';
-import FuncSwitch from './FuncSwitch.vue';
+import { controller_color, gen_bt_addr, 
+    fw_version_text, hex_to_rgb, read_erom_sync, rgb_to_hex, send_conf, chip_id, 
+    fw_version,
+    controller_color_save,
+    device_status, 
+    fw_snd} from '../Api/webusb'
+import FuncSwitch from '../UI/FuncSwitch.vue';
 import axios from 'axios';
+import HintSelect from '../UI/HintSelect.vue';
+import { conf, conf_download_all, conf_upload_all, GetConfigDTO, ImplementConfigDTO, ReadStockConfig, SaveStockConfig } from '../Api/config';
+import _ from 'lodash';
 export default {
     setup() {
         const is_admin=inject("$IS_ADMIN");
         return {
+            controller_color_save,
             is_admin,
             loading:ref(false),
             fw_version_text,
-            latest_fw_version_text: "V1.4.0.0",
+            latest_fw_version_text: "V1.4.0.3",
             reactive,
-            conf_unserilize,
             conf_seri: ref(""),
             conf,
             chip_id,
-            read_erom,
-            controller_color_save,
+            read_erom_sync,
+            device_status,
+            status_interval:null,
             pro_fw_ver_list: [
                 {
                     label: '3.48',
@@ -160,32 +174,38 @@ export default {
                 {
                     label: '60',
                     value: 16,
-                    disabled: true
+                    disabled: false,
+                    hint: 'hint.not_for_ns'
                 },
                 {
                     label: '125',
                     value: 8,
-                    disabled: false
+                    disabled: false,
+                    hint: 'hint.for_ns'
                 },
                 {
                     label: '200',
                     value: 5,
-                    disabled: false
+                    disabled: false,
+                    hint: 'hint.for_ns'
                 },
                 {
                     label: '250',
                     value: 4,
-                    disabled: false
+                    disabled: false,
+                    hint: 'hint.best_for_ns'
                 },
                 {
                     label: '500',
                     value: 2,
-                    disabled: true
+                    disabled: false,
+                    hint: 'hint.not_for_ns'
                 },
                 {
                     label: '1000',
                     value: 1,
-                    disabled: false
+                    disabled: false,
+                    hint: 'hint.not_for_ns'
                 },
             ],
             pkt_timer_mode_list: [
@@ -242,140 +262,105 @@ export default {
         },
         bd_addr_0:{
             get(){
-                return conf.bd_addr[0].toString(16).padStart(2, '0');
+                return conf.basic.bd_addr[0].toString(16).padStart(2, '0');
             },
             set(str:string){
-                conf.bd_addr[0]=parseInt(str,16);
+                conf.basic.bd_addr[0]=parseInt(str,16);
             }
         },
         bd_addr_1:{
             get(){
-                return conf.bd_addr[1].toString(16).padStart(2, '0');
+                return conf.basic.bd_addr[1].toString(16).padStart(2, '0');
             },
             set(str:string){
-                conf.bd_addr[1]=parseInt(str,16);
+                conf.basic.bd_addr[1]=parseInt(str,16);
             }
         },
         bd_addr_2:{
             get(){
-                return conf.bd_addr[2].toString(16).padStart(2, '0');
+                return conf.basic.bd_addr[2].toString(16).padStart(2, '0');
             },
             set(str:string){
-                conf.bd_addr[2]=parseInt(str,16);
+                conf.basic.bd_addr[2]=parseInt(str,16);
             }
         },
         bd_addr_3:{
             get(){
-                return conf.bd_addr[3].toString(16).padStart(2, '0');
+                return conf.basic.bd_addr[3].toString(16).padStart(2, '0');
             },
             set(str:string){
-                conf.bd_addr[3]=parseInt(str,16);
+                conf.basic.bd_addr[3]=parseInt(str,16);
             }
         },
         bd_addr_4:{
             get(){
-                return conf.bd_addr[4].toString(16).padStart(2, '0');
+                return conf.basic.bd_addr[4].toString(16).padStart(2, '0');
             },
             set(str:string){
-                conf.bd_addr[4]=parseInt(str,16);
+                conf.basic.bd_addr[4]=parseInt(str,16);
             }
         },
         bd_addr_5:{
             get(){
-                return conf.bd_addr[5].toString(16).padStart(2, '0');
+                return conf.basic.bd_addr[5].toString(16).padStart(2, '0');
             },
             set(str:string){
-                conf.bd_addr[5]=parseInt(str,16);
+                conf.basic.bd_addr[5]=parseInt(str,16);
             }
         },
-        usb_auto_recovery:{
-            get():boolean{
-                return (conf.config_bitmap1 & 0x80) == 0;
-            },
-            set(v:boolean){
-                if(v)
-                    conf.config_bitmap1 &= ~0x80;
-                else
-                    conf.config_bitmap1 |= 0x80;
-            }
-        },
-        rgb_slow_start_period:{
-            get():number{
-                return conf.rgb_slow_start_period/20;
-            },
-            set(v:number){
-                let r=v*10;
-                if(r>200)r=200;
-                else if(r<0)r=0;
-                conf.rgb_slow_start_period=v*20;
-            }
-        },
+        scan_rate:{
+            get(){
+                return (device_status.loopcnt/device_status.looptick*1000).toFixed(0);
+            },set(str:string){}
+        }
     },
     methods: {
-        async read_conf_cloud(){
-            this.loading=true;
-            const res = await axios.get('/config/'+chip_id.value) as any;
-            if(res.code!='SUCCESS'){
-                alert(res.code+":"+res.data.message);
-            }else{
-                if(res.data.chipId!=chip_id.value){
-                    alert("chip id check failed.");
-                }
-                else{
-                    this.conf_seri=res.data.config;
-                    let p = JSON.parse(res.data.config);
-                    conf_unserilize(p.conf);
-                    this.color_shell=rgb_to_hex(p.controller_color[0]);
-                    this.color_button=rgb_to_hex(p.controller_color[1]);
-                    this.color_grip_left=rgb_to_hex(p.controller_color[2]);
-                    this.color_grip_right=rgb_to_hex(p.controller_color[3]);
-                    send_rgb(0x1);
-                    controller_color_save(0x1);
-                    send_conf(0xf);
-                }
-                //todo: firmware version auto fitting.
-            }
-            this.loading=false;
+        read_conf_cloud(){
+            conf_download_all();
+            /*this.color_shell = controller_color[0].hex();
+            this.color_button = controller_color[1].hex();
+            this.color_grip_left = controller_color[2].hex();
+            this.color_grip_right = controller_color[3].hex();*/
         },
-        async save_conf_cloud(){
-            this.loading=true;
-            this.export_json_config();
-            const res = await axios.post('/config',{chipId:chip_id.value,firmwareVersion:fw_version,config:this.conf_seri}) as any;
-            console.log({chipId:chip_id.value,firmwareVersion:fw_version,config:this.conf_seri});
-            if(res.code!='SUCCESS'){
-                alert(res.code+":"+res.data.message);
-            }else{
-                alert("cloud save success");
-            }
-            this.loading=false;
+        save_conf_cloud(){
+            conf_upload_all();
+        },
+        read_stock_conf(){
+            ReadStockConfig();
+        },
+        save_stock_conf(){
+            SaveStockConfig();
         },
         generate_bd_addr() {
             gen_bt_addr();
         },
         export_json_config(){
-            let p=Object();
-            p.conf=conf;
-            //p.factory_config=factory_config;
-            p.controller_color=controller_color;
+            let p = GetConfigDTO();
             this.conf_seri=JSON.stringify(p);
         },
         import_json_config(){
-            let p=JSON.parse(this.conf_seri);
-            conf_unserilize(p.conf);
-            //Object.assign(controller_color,p.controller);
-            this.color_shell=rgb_to_hex(p.controller_color[0]);
-            this.color_button=rgb_to_hex(p.controller_color[1]);
-            this.color_grip_left=rgb_to_hex(p.controller_color[2]);
-            this.color_grip_right=rgb_to_hex(p.controller_color[3]);
-            send_rgb(1);
-            controller_color_save(0x1);
-            send_conf(0xf);
+            let p = JSON.parse(this.conf_seri);
+            ImplementConfigDTO(p);
         }
     },
     components:{
         FuncSwitch,
+        HintSelect,
+    },
+    mounted(){
+        this.status_interval = setInterval(()=>{fw_snd(0xFD,null);},1000);
+    },
+    unmounted() {
+        if(!_.isNil(this.status_interval)){
+            clearInterval(this.status_interval);
+            this.status_interval=null;
+        }
     },
     beforeDestroy() {
+        if(!_.isNil(this.status_interval)){
+            clearInterval(this.status_interval);
+            this.status_interval=null;
+        }
     }
 }
 </script>

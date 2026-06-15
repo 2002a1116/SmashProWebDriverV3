@@ -17,7 +17,8 @@
         "save_all":"保存全部",
         "restart":"重启",
         "lang":"language",
-        "opts":"操作"
+        "opts":"操作",
+        "format":"配置格式"
     },
     "text":{
         "read":"读取",
@@ -89,7 +90,7 @@
         "scan":"扫描",
         "indi_only":"仅指示灯",
         "full_rgb":"全RGB",
-        "reverse":"翻转",
+        "reverse":"反转",
         "raw":"原始",
         "status":"状态",
         "gyro":"陀螺仪",
@@ -115,8 +116,15 @@
         "order_note":"订单备注（内部）",
         "remove":"移除",
         "stock_info":"出厂信息",
-        "allow_rgb_on_bat":"允许RGB离电点亮",
-        "cancel":"取消"
+        "allow_rgb_on_bat":"RGB离电点亮",
+        "cancel":"取消",
+        "indi_led_ofst":"指示灯偏移数",
+        "typ":"型号",
+        "cloud_service":"云服务",
+        "show_octo":"显示八角轮廓",
+        "scanrate":"按键扫描率",
+        "stock":"出厂",
+        "config":"配置"
     },
     "hint":{
         "drop_high":"#尝试降低较强的震动",
@@ -124,7 +132,10 @@
         "rumble_strategy":"震动波形切换策略(仅遗留模式):",
         "js_center_cali":"#校准中心点时，请保持摇杆自然回中.",
         "hw_setting":"配置硬件相关信息",
-        "stock_info_notfound":"未找到出厂信息"
+        "stock_info_notfound":"未找到出厂信息",
+        "for_ns":"兼容Switch",
+        "best_for_ns":"推荐设置",
+        "not_for_ns":"请勿在Switch上使用此设置"
     },
     "msg":{
         "no_data":"无数据",
@@ -134,6 +145,27 @@
         "factory_config_recovered_stock":"已自动从云端恢复出厂硬件信息.",
         "user_config_recover_failed":"从云端恢复用户配置失败.",
         "factory_config_recover_failed":"从云端恢复设备信息失败，请根据硬件配置手动设置."
+    },
+    "dir":{
+        "up":"上",
+        "down":"下",
+        "left":"左",
+        "right":"右",
+        "up_left":"左上",
+        "up_right":"右上",
+        "down_left":"左下",
+        "down_right":"右下"
+    },
+    "affine":{
+        "angle":"角度",
+        "notch":"目标",
+        "add":"新增",
+        "clear":"清空",
+        "mod":"修改",
+        "del":"删除",
+        "empty":"列表为空",
+        "legit":"列表合法",
+        "illegit":"列表不合法"
     },
     "cur_lang":"中文",
     "word_sep":""
