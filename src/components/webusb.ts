@@ -538,11 +538,16 @@ export const fw_ver_at_least=0x00010400;
 export let fw_version_text=ref("V0.0.0.0");
 export const dev_con_flg=ref(false);
 export let chip_id=ref("");
+function formatDevices (devices) {
+  return devices.map(device => device.productName).join('<hr>')
+}
+
 export async function open_device() {
     try {
         // requestDevice方法将显示一个包含已连接设备列表的对话框，用户选择可以并授予其中一个设备访问权限
-        const devices = await (navigator as any).hid.requestDevice({ filters: [] });
+        const devices = await navigator.hid.requestDevice({ filters: [{vendorId:0x057e,productId:0x2009}] });
 
+        console.log(devices);
         if (devices.length == 0) {
             alert("No device selected.");
             return;
@@ -613,7 +618,7 @@ export async function open_device() {
                     read_erom(0x6046, 0x09);
                     read_erom(0x8001, 0x08);
                     read_erom(0x6050, 0x0C);
-                    alert("Please makesure hardware info match your controller hardware.");
+                    //alert("Please makesure hardware info match your controller hardware.");
                     break;
                 case 0x01:
                     break;

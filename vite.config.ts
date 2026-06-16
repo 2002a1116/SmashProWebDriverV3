@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import viteCompression from 'vite-plugin-compression';
+import electron from 'vite-plugin-electron';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,8 +12,14 @@ export default defineConfig({
       threshold: 2560,
       verbose: false, 
     }),
+    electron({
+      entry: 'electron/main.js', // 指定主进程入口
+    }),
   ],
-  base: '',
+  build: {
+    outDir: 'dist', // 确保构建输出目录与主进程加载路径一致
+  },
+  base: './',
   /*server: {
     proxy: {
       // 将以 /api 开头的请求代理到 http://localhost:3000

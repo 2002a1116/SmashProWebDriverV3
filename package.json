@@ -1,8 +1,10 @@
 {
-  "name": "smashpro_webdriver_v3",
+  "name": "SmashPro_Driver",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "main": "electron/main.js",
+  "author":"Reed",
+  "description": "smashpro_webdriver for firmware v1.4",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
@@ -14,7 +16,10 @@
     "pack:build": "npm run build && npm run pack",
     "pack": "docker build -t driver_frontend . && docker save -o frontend.tar driver_frontend",
     "upload": "dockerx build -t driver_frontend .",
-    "update": "npm run deploy && npm run upload"
+    "update": "npm run deploy && npm run upload",
+    "electron:dev": "vite & electron .",
+    "electron:build": "vite build && electron-builder",
+    "electron:pack": "electron-builder"
   },
   "dependencies": {
     "axios": "^1.13.6",
@@ -30,12 +35,36 @@
     "@vicons/ionicons5": "^0.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
+    "electron": "^42.4.1",
+    "electron-builder": "^26.15.3",
     "gh-pages": "^6.3.0",
     "naive-ui": "^2.41.0",
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
     "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-electron": "^1.0.4",
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.4"
+  },
+  "build": {
+    "appId": "com.smashpro.driver.v14",   
+    "productName": "SmashPro Driver",       
+    "directories": {
+      "output": "release"           
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/*",
+      "electron/*"           
+    ],
+    "win": {                        
+      "target": "portable",             
+      "icon": "build/icon.ico"      
+    },
+    "nsis": {                       
+      "oneClick": false,            
+      "perMachine": true,           
+      "allowToChangeInstallationDirectory": true  
+    }
   }
 }

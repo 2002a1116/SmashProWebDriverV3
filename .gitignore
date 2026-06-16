@@ -26,3 +26,5 @@ dist-ssr
 #bats
 *.bat
 /dist
+/release
+/dist-electron
