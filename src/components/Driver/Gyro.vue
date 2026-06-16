@@ -8,7 +8,8 @@
                 <n-flex vertical>
                     <n-flex justify="space-evenly">
                         <n-flex>
-                            <func-switch v-model:value="conf.imu.enable" :text="$t('text.gyro')"/>
+                            <span>{{$t('text.gyro')}}:</span>
+                            <n-switch v-model:value="imu_enabled" />
                         </n-flex>
                         <n-flex>
                             <n-button @click="calibrate_sensor">
@@ -16,7 +17,7 @@
                             </n-button>
                         </n-flex>
                     </n-flex>
-                    <span>{{ $t('text.sample_gap') }}({{ $t('text.ms') }}):</span>
+                    <span>{{ $t('text.sample_gap') }}:</span>
                     <n-input-number v-model:value="imu_sample_gap" size="small" />
                     <n-slider v-model:value="imu_sample_gap" :step="0.001" :min="1" :max="5" />
                 </n-flex>
@@ -45,14 +46,11 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { GYRO_FACTOR,calibrate_sensor } from '../Api/webusb'
-import { conf } from '../Api/config';
-import FuncSwitch from '../UI/FuncSwitch.vue';
+import { conf,GYRO_FACTOR,calibrate_sensor } from '../webusb'
 export default {
     setup() {
         return {
             calibrate_sensor,
-            conf,
             //imu_sample_gap: ref(1.75),
             //imu_enabled: ref(1),
             //gyro_ratio_x: ref(1),
@@ -60,40 +58,48 @@ export default {
             //gyro_ratio_z: ref(1)
         }
     },
-    components:{
-        FuncSwitch
-    },
     computed:{
+        imu_enabled:{
+            get():boolean{
+                return !(conf.config_bitmap0&0x80);
+            },
+            set(v:boolean){
+                if(v)
+                    conf.config_bitmap0&=(~0x80);
+                else
+                    conf.config_bitmap0|=0x80;
+            }
+        },
         imu_sample_gap:{
             get():number{
-                return conf.imu.sample_gap/1000;
+                return conf.imu_sample_gap/1000;
             },
             set(v:number){
-                conf.imu.sample_gap=v*1000;
+                conf.imu_sample_gap=v*1000;
             }
         },
         gyro_ratio_x:{
             get():number{
-                return conf.imu.ratio_x/GYRO_FACTOR*100;
+                return conf.imu_ratio_x/GYRO_FACTOR*100;
             },
             set(v:number){
-                conf.imu.ratio_x=v*GYRO_FACTOR/100;
+                conf.imu_ratio_x=v*GYRO_FACTOR/100;
             }
         },
         gyro_ratio_y:{
             get():number{
-                return conf.imu.ratio_y/GYRO_FACTOR*100;
+                return conf.imu_ratio_y/GYRO_FACTOR*100;
             },
             set(v:number){
-                conf.imu.ratio_y=v*GYRO_FACTOR/100;
+                conf.imu_ratio_y=v*GYRO_FACTOR/100;
             }
         },
         gyro_ratio_z:{
             get():number{
-                return conf.imu.ratio_z/GYRO_FACTOR*100;
+                return conf.imu_ratio_z/GYRO_FACTOR*100;
             },
             set(v:number){
-                conf.imu.ratio_z=v*GYRO_FACTOR/100;
+                conf.imu_ratio_z=v*GYRO_FACTOR/100;
             }
         }
     },

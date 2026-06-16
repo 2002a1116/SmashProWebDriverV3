@@ -8,12 +8,12 @@
                 <n-select v-model:value="rgb_layout" :options="rgb_layout_list" style="width: 150px" />
             </n-flex>
             <n-flex justify="center">
-                <n-card style="height: 400px; max-width: 800px; width:100%;">
+                <n-card style="height: 400px; max-width: 800px;">
                     <div class="rgb_background">
                         <n-color-picker v-for="(item,index) in rgb_pos_cal" 
                         :show-preview="true" :show-alpha="false" size="small"
                         v-model:value="rgb_value[index]" 
-                        :on-complete="(value:string)=>{conf.rgb.data[index]=hex_to_rgb(value);}" 
+                        :on-complete="(value:string)=>{conf.rgb_data[index]=hex_to_rgb(value);send_rgb(0);}" 
                         >
                             <template #trigger="{ value, onClick, ref: triggerRef }">
                                 <rgb-button :ref="triggerRef" @click="onClick" text="Set" :bg_color="value" :text_color="rgb_button_color_cal_rev(value)" 
@@ -26,15 +26,8 @@
             <n-flex justify="center">
                 <n-card>
                     <n-flex vertical>
-                        <func-switch v-model:value="conf.rgb.enable" :text="$t('text.rgb_setting')"/>
-                        <func-switch v-model:value="conf.rgb.allow_rgb_on_bat" :text="$t('text.allow_rgb_on_bat')"/>
-                        <n-card>
-                            <n-flex justify="space-between">
-                                <span>{{ $t('text.rgb_slow_start') }}:</span>
-                                <n-input-number v-model:value="rgb_slow_start_period" size="small" :step="0.05" :min="0" :max="10" style="width: 100px;"/>
-                            </n-flex>
-                            <n-slider v-model:value="rgb_slow_start_period" :step="0.05" :min="0" :max="10"/>
-                        </n-card>
+                        <func-switch v-model:value="led_enabled" :text="$t('text.rgb_setting')"/>
+                        <func-switch v-model:value="allow_rgb_on_bat" :text="$t('text.allow_rgb_on_bat')"/>
                     </n-flex>
                 </n-card>
             </n-flex>
@@ -53,11 +46,10 @@
 </style>
 <script lang="ts">
 import { computed, h, reactive, ref, watch } from 'vue';
-import { hex_to_rgb, rgb_to_hex } from '../Api/webusb';
-import RgbButton from '../UI/RgbButton.vue'
+import { conf, hex_to_rgb, rgb_to_hex, send_rgb } from '../webusb';
+import RgbButton from './RgbButton.vue'
 import { useI18n } from 'vue-i18n';
-import FuncSwitch from '../UI/FuncSwitch.vue';
-import { conf } from '../Api/config.ts';
+import FuncSwitch from './FuncSwitch.vue';
 let rgb_layout = ref(1);
 let rgb_pos=[[{left:280,top:100},
         {left:200,top:100},
@@ -115,11 +107,11 @@ export default {
     setup() {
         const { t } = useI18n();
         let rgb_value = reactive([]);
-        conf.rgb.data.forEach((item,index) => {
+        conf.rgb_data.forEach((item,index) => {
             rgb_value.push(rgb_to_hex(item));
         });
-        watch(conf.rgb.data,()=>{
-            conf.rgb.data.forEach((item,index) => {
+        watch(conf.rgb_data,()=>{
+            conf.rgb_data.forEach((item,index) => {
             rgb_value[index]=(rgb_to_hex(item));
         });
         })
@@ -131,6 +123,7 @@ export default {
             conf,
             rgb_value,
             rgb_pos,
+            send_rgb,
             rgb_layout,
             rgb_layout_list:computed(()=>[
             {
@@ -168,17 +161,26 @@ export default {
                 return arr;
             }
         },
-        rgb_slow_start_period:{
-            get():number{
-                return conf.rgb.slow_start_period/20;
+        led_enabled:{
+            get():boolean{
+                return (conf.config_bitmap0&0x02)==0;
             },
-            set(v:number){
-                let r=v*10;
-                if(r>200)r=200;
-                else if(r<0)r=0;
-                conf.rgb.slow_start_period=v*20;
+            set(v:boolean){
+                if (!v) conf.config_bitmap0 |= 0x02;
+                else conf.config_bitmap0 &= (~0x02);
             }
-        },
+        }, 
+        allow_rgb_on_bat:{
+            get():boolean{
+                return (conf.config_bitmap1&0x80) != 0;
+            },
+            set(v:boolean){
+                if(v)
+                    conf.config_bitmap1 |= 0x80;
+                else
+                    conf.config_bitmap1 &= 0x7f;
+            }
+        }
     }
 }
 </script>

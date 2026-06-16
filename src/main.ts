@@ -3,8 +3,6 @@ import './style.css'
 import App from './App.vue'
 import router from './router/index.ts';
 import naive, { NIcon } from 'naive-ui'
-//import 'default-passive-events';
-
 
 // createApp(App).mount('#app') 
 

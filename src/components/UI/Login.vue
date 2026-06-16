@@ -1,37 +1,39 @@
 <template>
-    <n-card hoverable title="Login" :bordered="false" size="large">
-        <n-flex vertical justify="center">
-            <n-input v-model:value="info.username" type="text" :placeholder="$t('text.username')" style="width: 400px"/>    
-            <n-input v-model:value="info.password" type="text" :placeholder="$t('text.password')" style="width: 400px"/>
-            <n-grid x-gap="0" :cols="24" collapsed-rows=1>
-                <n-gi span="11">
-                    <n-flex vertical justify="center">
-                        <n-button :loading="loading" @click="show=false;">
-                            {{ $t('text.cancel') }}
-                            <template #icon>
-                            <n-icon>
-                                <Cash/>
-                            </n-icon>
-                            </template>
-                        </n-button>
-                    </n-flex>
-                </n-gi>
-                <n-gi span="2"></n-gi>
-                <n-gi span="11">
-                    <n-flex vertical justify="center">
-                        <n-button :loading="loading" @click="handleClick">
-                            {{ $t('text.login') }}
-                            <template #icon>
-                            <n-icon>
-                                <Cash/>
-                            </n-icon>
-                            </template>
-                        </n-button>
-                    </n-flex>
-                </n-gi>
-            </n-grid>
-        </n-flex>
-    </n-card>
+    <div class="center-container">
+        <n-card hoverable>
+            <n-flex vertical justify="center">
+                <n-input v-model:value="info.username" type="text" :placeholder="$t('text.username')" style="width: 400px"/>    
+                <n-input v-model:value="info.password" type="text" :placeholder="$t('text.password')" style="width: 400px"/>
+                <n-grid x-gap="0" :cols="24" collapsed-rows=1>
+                    <n-gi span="11">
+                        <n-flex vertical justify="center">
+                            <n-button :loading="loading" @click="show=false;">
+                                {{ $t('text.cancel') }}
+                                <template #icon>
+                                <n-icon>
+                                    <Cash/>
+                                </n-icon>
+                                </template>
+                            </n-button>
+                        </n-flex>
+                    </n-gi>
+                    <n-gi span="2"></n-gi>
+                    <n-gi span="11">
+                        <n-flex vertical justify="center">
+                            <n-button :loading="loading" @click="handleClick">
+                                {{ $t('text.login') }}
+                                <template #icon>
+                                <n-icon>
+                                    <Cash/>
+                                </n-icon>
+                                </template>
+                            </n-button>
+                        </n-flex>
+                    </n-gi>
+                </n-grid>
+            </n-flex>
+        </n-card>
+    </div>
 </template>
 <script setup lang="ts">
 import axios from 'axios';
@@ -42,7 +44,6 @@ interface login_info{
     username:string,
     password:string
 }
-const is_admin=inject("$IS_ADMIN");
 const role:Ref<string>=inject('$ROLE');
 const info=ref<login_info>({username:"",password:""});
 const loading=ref(false);

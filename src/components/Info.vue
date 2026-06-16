@@ -4,7 +4,7 @@
     <h1>Info</h1>
 </n-flex>
 <n-flex justify="center">
-    <n-card style="width: 1200px;">
+    <n-card style="max-width: 800px;">
         <n-flex vertical>
             <n-flex justify="center">
                 <h2>Purchases:</h2>
@@ -150,7 +150,7 @@
 </n-flex>
 </template>
 <script lang="ts">
-import {open_device,device} from './Api/webusb'
+import {open_device,device} from './webusb'
 export default{
 setup() {
 return{
